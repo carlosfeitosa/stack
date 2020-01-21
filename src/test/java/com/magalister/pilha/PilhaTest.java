@@ -1,10 +1,10 @@
-package com.magalister.stack;
+package com.magalister.pilha;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class StackTest {
-
+class PilhaTest {
+	
 	/**
 	 * Inicializa a pilha.
 	 * 
