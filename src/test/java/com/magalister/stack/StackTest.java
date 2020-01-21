@@ -1,12 +1,32 @@
 package com.magalister.stack;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class StackTest {
+class StackTest {
+
+	/**
+	 * Inicializa a pilha.
+	 * 
+	 * @throws Exception
+	 */
+	@BeforeEach
+	void setUp() throws Exception {
+	}
+
+	/**
+	 * Limpa a pilha.
+	 * 
+	 * @throws Exception
+	 */
+	@AfterEach
+	void tearDown() throws Exception {
+	}
+
 	@Test
 	/**
-	 * Testa se a pilha consegue receber um "push", adicionando o elemento ao topo
-	 * da pilha.
+	 * Testa se a pilha consegue adicionar um item (push), no topo da estrutura.
 	 */
 	public void consegueAdicionarItem() {
 
@@ -65,4 +85,5 @@ public class StackTest {
 	public void consegueEstourar() {
 
 	}
+
 }
