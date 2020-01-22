@@ -7,6 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.magalister.pilha.exceptions.EstouroDePilhaException;
+import com.magalister.pilha.exceptions.PilhaVaziaException;
+import com.magalister.pilha.impl.PilhaImpl;
+
+/**
+ * Testes unitários para a classe Pilha.
+ * 
+ * @author Carlos Feitosa (carlos.feitosa.nt@#gmail.com)
+ * @since 2020-01-22
+ *
+ */
 class PilhaTest {
 
 	private Pilha pilha;
@@ -25,15 +36,17 @@ class PilhaTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		pilha = new Pilha(TAMANHO);
+		pilha = new PilhaImpl(TAMANHO);
 	}
 
 	/**
 	 * Testa se a pilha consegue adicionar um item (push), no topo da estrutura.
 	 * Pode estourar uma exceção por estouro de pilha.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
 	 */
 	@Test
-	public void consegueAdicionarItem() {
+	public void consegueAdicionarItem() throws EstouroDePilhaException {
 		int numero = 7777;
 		int tamanhoPilha = pilha.size();
 
@@ -45,32 +58,41 @@ class PilhaTest {
 	/**
 	 * Testa se a pilha consegue recuperar e remover (pop) um item, no topo da
 	 * estrutura. Pode estourar uma exceção por não haver elementos.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
+	 * @throws PilhaVaziaException     se a pilha estiver vazia na tentativa de
+	 *                                 recupearar um item
 	 */
 	@Test
-	public void conseguePegarItem() {
+	public void conseguePegarItem() throws EstouroDePilhaException, PilhaVaziaException {
 		int numero = 7777;
-		int tamanhoPilha = pilha.size();
 
 		pilha.push(numero);
+
+		int tamanhoPilha = pilha.size();
 
 		int numeroPop = pilha.pop();
 
 		assertEquals(numero, numeroPop, ASSERT_MSG_NUMERO);
-		assertTrue(pilha.size() == (tamanhoPilha - 1), ASSERT_MSG_TAMANHO_FILA);
+		assertEquals(pilha.size(), tamanhoPilha - 1, ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
 	 * Testa se a pilha consegue recuperar sem remover (peek) um item, no topo da
 	 * estrutura. Pode estourar exceção por não haver elementos.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
+	 * @throws PilhaVaziaException     se a pilha estiver vazia na tentativa de
+	 *                                 recupearar um item
 	 */
 	@Test
-	public void conseguePegarItemSemRemover() {
+	public void conseguePegarItemSemRemover() throws EstouroDePilhaException, PilhaVaziaException {
 		int numero = 7777;
 		int tamanhoPilha = pilha.size();
 
 		pilha.push(numero);
 
-		int numeroPop = pilha.pop();
+		int numeroPop = pilha.peek();
 
 		assertEquals(numero, numeroPop, ASSERT_MSG_NUMERO);
 		assertTrue(pilha.size() == tamanhoPilha, ASSERT_MSG_TAMANHO_FILA);
@@ -86,9 +108,11 @@ class PilhaTest {
 
 	/**
 	 * Testa se a pilha consegue saber se não está vazia.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
 	 */
 	@Test
-	public void consegueSaberSeNaoEstaVazio() {
+	public void consegueSaberSeNaoEstaVazio() throws EstouroDePilhaException {
 		int numero = 7777;
 
 		pilha.push(numero);
@@ -98,38 +122,44 @@ class PilhaTest {
 
 	/**
 	 * Testa se a pilha consegue saber se está cheia.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
 	 */
 	@Test
-	public void consegueSaberSeEstaCheio() {
-		pilha = new Pilha(TAMANHO_REDUZIDO);
+	public void consegueSaberSeEstaCheio() throws EstouroDePilhaException {
+		pilha = new PilhaImpl(TAMANHO_REDUZIDO);
 
 		int numero = 7777;
 
 		pilha.push(numero);
 		pilha.push(numero);
 
-		assertTrue(pilha.isFull, ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(pilha.isFull(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
 	 * Testa se a pilha consegue saber se não está cheia.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
 	 */
 	@Test
-	public void consegueSaberSeNaoEstaCheio() {
-		pilha = new Pilha(TAMANHO_REDUZIDO);
+	public void consegueSaberSeNaoEstaCheio() throws EstouroDePilhaException {
+		pilha = new PilhaImpl(TAMANHO_REDUZIDO);
 
 		int numero = 7777;
 
 		pilha.push(numero);
 
-		assertTrue(!pilha.isFull, ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(!pilha.isFull(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
 	 * Testa se a pilha consegue determinar seu tamanho.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
 	 */
 	@Test
-	public void consegueDeterminarSeuTamanho() {
+	public void consegueDeterminarSeuTamanho() throws EstouroDePilhaException {
 		int numero = 7777;
 		int quantidade = 9;
 
@@ -142,9 +172,11 @@ class PilhaTest {
 
 	/**
 	 * Testa se a pilha consegue se limpar.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
 	 */
 	@Test
-	public void consegueLimpar() {
+	public void consegueLimpar() throws EstouroDePilhaException {
 		int numero = 7777;
 
 		pilha.push(numero);
@@ -170,10 +202,24 @@ class PilhaTest {
 	}
 
 	/**
-	 * Testa se a pilha está armazenando os itens na ordem correta.
+	 * Testa se a pilha estoura exceção se pop|peek com a fila vazia.
 	 */
 	@Test
-	public void consegueEmpilhar() {
+	public void consegueEstourarFilaVazia() {
+		assertThrows(PilhaVaziaException.class, () -> {
+			pilha.pop();
+		}, ASSERT_MSG_EXCECAO);
+	}
+
+	/**
+	 * Testa se a pilha está armazenando os itens na ordem correta.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
+	 * @throws PilhaVaziaException     se a pilha estiver vazia na tentativa de
+	 *                                 recupearar um item
+	 */
+	@Test
+	public void consegueEmpilhar() throws EstouroDePilhaException, PilhaVaziaException {
 		int[] itens = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 		int[] itensReverso = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
