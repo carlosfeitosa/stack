@@ -1,6 +1,7 @@
 package com.magalister.pilha;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,13 +21,12 @@ import com.magalister.pilha.impl.PilhaImpl;
  */
 class PilhaTest {
 
-	private Pilha pilha;
+	private Pilha<Integer> pilhaInteiros;
 
-	private static final int TAMANHO = 10;
 	private static final int TAMANHO_REDUZIDO = 2;
 
 	private static final String ASSERT_MSG_TAMANHO_FILA = "Tamanho da pilha diferente da esperada";
-	private static final String ASSERT_MSG_NUMERO = "Número diferente do esperado";
+	private static final String ASSERT_MSG_ELEMENTO = "Elemento diferente do esperado";
 	private static final String ASSERT_MSG_EXCECAO = "Exceção diferente da esperada";
 
 	/**
@@ -36,7 +36,7 @@ class PilhaTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		pilha = new PilhaImpl(TAMANHO);
+		pilhaInteiros = new PilhaImpl<Integer>();
 	}
 
 	/**
@@ -48,11 +48,11 @@ class PilhaTest {
 	@Test
 	public void consegueAdicionarItem() throws EstouroDePilhaException {
 		int numero = 7777;
-		int tamanhoPilha = pilha.size();
+		int tamanhoPilha = pilhaInteiros.size();
 
-		pilha.push(numero);
+		pilhaInteiros.push(numero);
 
-		assertTrue(pilha.size() == (tamanhoPilha + 1), ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(pilhaInteiros.size() == (tamanhoPilha + 1), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -67,14 +67,14 @@ class PilhaTest {
 	public void conseguePegarItem() throws EstouroDePilhaException, PilhaVaziaException {
 		int numero = 7777;
 
-		pilha.push(numero);
+		pilhaInteiros.push(numero);
 
-		int tamanhoPilha = pilha.size();
+		int tamanhoPilha = pilhaInteiros.size();
 
-		int numeroPop = pilha.pop();
+		int numeroPop = pilhaInteiros.pop();
 
-		assertEquals(numero, numeroPop, ASSERT_MSG_NUMERO);
-		assertEquals(pilha.size(), tamanhoPilha - 1, ASSERT_MSG_TAMANHO_FILA);
+		assertEquals(numero, numeroPop, ASSERT_MSG_ELEMENTO);
+		assertEquals(pilhaInteiros.size(), tamanhoPilha - 1, ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -87,15 +87,61 @@ class PilhaTest {
 	 */
 	@Test
 	public void conseguePegarItemSemRemover() throws EstouroDePilhaException, PilhaVaziaException {
+		int numero1 = 7777;
+		int numero2 = 6666;
+
+		pilhaInteiros.push(numero1);
+		pilhaInteiros.push(numero2);
+
+		int tamanhoPilha = pilhaInteiros.size();
+
+		assertEquals(numero2, pilhaInteiros.peek(), ASSERT_MSG_ELEMENTO);
+		assertTrue(pilhaInteiros.size() == tamanhoPilha, ASSERT_MSG_TAMANHO_FILA);
+		assertEquals(numero2, pilhaInteiros.pop(), ASSERT_MSG_ELEMENTO);
+		assertEquals(numero1, pilhaInteiros.pop(), ASSERT_MSG_ELEMENTO);
+	}
+
+	/**
+	 * Testa se a pilha consegue achar um elemento.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
+	 * @throws PilhaVaziaException     se a pilha estiver vazia na tentativa de
+	 *                                 recupearar um item
+	 */
+	@Test
+	public void consegueAcharItem() throws EstouroDePilhaException, PilhaVaziaException {
 		int numero = 7777;
-		int tamanhoPilha = pilha.size();
 
-		pilha.push(numero);
+		pilhaInteiros.push(1234);
+		pilhaInteiros.push(4534);
+		pilhaInteiros.push(3485);
+		pilhaInteiros.push(numero);
+		pilhaInteiros.push(77344);
+		pilhaInteiros.push(683749);
 
-		int numeroPop = pilha.peek();
+		assertTrue(pilhaInteiros.contains(numero), ASSERT_MSG_ELEMENTO);
 
-		assertEquals(numero, numeroPop, ASSERT_MSG_NUMERO);
-		assertTrue(pilha.size() == tamanhoPilha, ASSERT_MSG_TAMANHO_FILA);
+	}
+
+	/**
+	 * Testa se a pilha consegue não achar um elemento.
+	 * 
+	 * @throws EstouroDePilhaException se estourar o tamanho da pilha
+	 * @throws PilhaVaziaException     se a pilha estiver vazia na tentativa de
+	 *                                 recupearar um item
+	 */
+	@Test
+	public void consegueNaoAcharItem() throws EstouroDePilhaException, PilhaVaziaException {
+		int numero = 7777;
+
+		pilhaInteiros.push(1234);
+		pilhaInteiros.push(4534);
+		pilhaInteiros.push(3485);
+		pilhaInteiros.push(77344);
+		pilhaInteiros.push(683749);
+
+		assertFalse(pilhaInteiros.contains(numero), ASSERT_MSG_ELEMENTO);
+
 	}
 
 	/**
@@ -103,7 +149,7 @@ class PilhaTest {
 	 */
 	@Test
 	public void consegueSaberSeEstaVazio() {
-		assertTrue(pilha.isEmpty(), ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(pilhaInteiros.isEmpty(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -115,9 +161,9 @@ class PilhaTest {
 	public void consegueSaberSeNaoEstaVazio() throws EstouroDePilhaException {
 		int numero = 7777;
 
-		pilha.push(numero);
+		pilhaInteiros.push(numero);
 
-		assertTrue(!pilha.isEmpty(), ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(!pilhaInteiros.isEmpty(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -127,14 +173,14 @@ class PilhaTest {
 	 */
 	@Test
 	public void consegueSaberSeEstaCheio() throws EstouroDePilhaException {
-		pilha = new PilhaImpl(TAMANHO_REDUZIDO);
+		pilhaInteiros = new PilhaImpl<Integer>(TAMANHO_REDUZIDO);
 
 		int numero = 7777;
 
-		pilha.push(numero);
-		pilha.push(numero);
+		pilhaInteiros.push(numero);
+		pilhaInteiros.push(numero);
 
-		assertTrue(pilha.isFull(), ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(pilhaInteiros.isFull(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -144,13 +190,13 @@ class PilhaTest {
 	 */
 	@Test
 	public void consegueSaberSeNaoEstaCheio() throws EstouroDePilhaException {
-		pilha = new PilhaImpl(TAMANHO_REDUZIDO);
+		pilhaInteiros = new PilhaImpl<Integer>(TAMANHO_REDUZIDO);
 
 		int numero = 7777;
 
-		pilha.push(numero);
+		pilhaInteiros.push(numero);
 
-		assertTrue(!pilha.isFull(), ASSERT_MSG_TAMANHO_FILA);
+		assertTrue(!pilhaInteiros.isFull(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -164,10 +210,10 @@ class PilhaTest {
 		int quantidade = 9;
 
 		for (int i = 0; i < quantidade; i++) {
-			pilha.push(numero);
+			pilhaInteiros.push(numero);
 		}
 
-		assertEquals(quantidade, pilha.size(), ASSERT_MSG_TAMANHO_FILA);
+		assertEquals(quantidade, pilhaInteiros.size(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -179,11 +225,11 @@ class PilhaTest {
 	public void consegueLimpar() throws EstouroDePilhaException {
 		int numero = 7777;
 
-		pilha.push(numero);
+		pilhaInteiros.push(numero);
 
-		pilha.clear();
+		pilhaInteiros.clear();
 
-		assertEquals(0, pilha.size(), ASSERT_MSG_TAMANHO_FILA);
+		assertEquals(0, pilhaInteiros.size(), ASSERT_MSG_TAMANHO_FILA);
 	}
 
 	/**
@@ -192,11 +238,11 @@ class PilhaTest {
 	@Test
 	public void consegueEstourar() {
 		int numero = 7777;
-		int quantidade = TAMANHO + 1;
+		int quantidade = pilhaInteiros.tamanhoPilha() + 1;
 
 		assertThrows(EstouroDePilhaException.class, () -> {
 			for (int i = 0; i < quantidade; i++) {
-				pilha.push(numero);
+				pilhaInteiros.push(numero);
 			}
 		}, ASSERT_MSG_EXCECAO);
 	}
@@ -207,7 +253,7 @@ class PilhaTest {
 	@Test
 	public void consegueEstourarFilaVazia() {
 		assertThrows(PilhaVaziaException.class, () -> {
-			pilha.pop();
+			pilhaInteiros.pop();
 		}, ASSERT_MSG_EXCECAO);
 	}
 
@@ -224,14 +270,14 @@ class PilhaTest {
 		int[] itensReverso = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
 		for (int i = 0; i < itens.length; i++) {
-			pilha.push(itens[i]);
+			pilhaInteiros.push(itens[i]);
 		}
 
 		for (int i = 0; i < itensReverso.length; i++) {
 			int numeroExperado = itensReverso[i];
-			int numeroPilha = pilha.pop();
+			int numeroPilha = pilhaInteiros.pop();
 
-			assertEquals(numeroExperado, numeroPilha, ASSERT_MSG_NUMERO);
+			assertEquals(numeroExperado, numeroPilha, ASSERT_MSG_ELEMENTO);
 		}
 	}
 

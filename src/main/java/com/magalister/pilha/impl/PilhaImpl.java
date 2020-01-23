@@ -11,56 +11,72 @@ import com.magalister.pilha.exceptions.PilhaVaziaException;
  * @since 2020-01-22.
  *
  */
-public class PilhaImpl implements Pilha {
+public class PilhaImpl<T> implements Pilha<T> {
 
-	private int[] pilha;
+	private static final int TAMANHO_DEFAULT = 10;
+
+	private T[] armazenamento;
 	private int index;
 
-	@SuppressWarnings("unused")
-	private PilhaImpl() {
-
-	}
-
-	public PilhaImpl(int tamanho) {
-		pilha = new int[tamanho];
+	@SuppressWarnings("unchecked")
+	public PilhaImpl() {
+		armazenamento = (T[]) new Object[TAMANHO_DEFAULT];
 
 		clear();
 	}
 
-	/**
-	 * Retorna o tamanho da pilha.
-	 * 
-	 * @return tamanho da pilha.
-	 */
-	private int tamanhoPilha() {
-		return pilha.length;
+	@SuppressWarnings("unchecked")
+	public PilhaImpl(int tamanho) {
+		armazenamento = (T[]) new Object[tamanho];
+
+		clear();
 	}
 
 	@Override
-	public void push(int numero) throws EstouroDePilhaException {
+	public int tamanhoPilha() {
+		return armazenamento.length;
+	}
+
+	@Override
+	public void push(T valor) throws EstouroDePilhaException {
 		if (isFull()) {
 			throw new EstouroDePilhaException();
 		}
 
-		pilha[++index] = numero;
+		armazenamento[++index] = valor;
 	}
 
 	@Override
-	public int pop() throws PilhaVaziaException {
+	public T pop() throws PilhaVaziaException {
 		if (isEmpty()) {
 			throw new PilhaVaziaException();
 		}
 
-		return pilha[index--];
+		T value = armazenamento[index--];
+
+		armazenamento[index + 1] = null;
+
+		return value;
 	}
 
 	@Override
-	public int peek() throws PilhaVaziaException {
+	public T peek() throws PilhaVaziaException {
 		if (isEmpty()) {
 			throw new PilhaVaziaException();
 		}
 
-		return pilha[index--];
+		return armazenamento[index];
+	}
+
+	@Override
+	public boolean contains(T valor) throws PilhaVaziaException {
+		for (int i = 0; i < index; i++) {
+			if (armazenamento[i].equals(valor)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
