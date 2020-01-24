@@ -248,12 +248,22 @@ class PilhaTest {
 	}
 
 	/**
-	 * Testa se a pilha estoura exceção se pop|peek com a fila vazia.
+	 * Testa se a pilha estoura exceção se pop com a fila vazia.
 	 */
 	@Test
-	public void consegueEstourarFilaVazia() {
+	public void consegueEstourarFilaVaziaPop() {
 		assertThrows(PilhaVaziaException.class, () -> {
 			pilhaInteiros.pop();
+		}, ASSERT_MSG_EXCECAO);
+	}
+	
+	/**
+	 * Testa se a pilha estoura exceção se peek com a fila vazia.
+	 */
+	@Test
+	public void consegueEstourarFilaVaziaPeek() {
+		assertThrows(PilhaVaziaException.class, () -> {
+			pilhaInteiros.peek();
 		}, ASSERT_MSG_EXCECAO);
 	}
 
