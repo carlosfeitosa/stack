@@ -256,7 +256,7 @@ class PilhaTest {
 			pilhaInteiros.pop();
 		}, ASSERT_MSG_EXCECAO);
 	}
-	
+
 	/**
 	 * Testa se a pilha estoura exceção se peek com a fila vazia.
 	 */
